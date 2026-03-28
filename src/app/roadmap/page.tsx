@@ -32,7 +32,7 @@ export default async function RoadmapPage() {
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">
           Interactive timeline from grade 9 through 12. Know exactly what to do
-          and when — localized for US, UK, India, and Nigeria.
+          and when — localized for US, UK, Canada, and Australia.
         </p>
       </div>
 
