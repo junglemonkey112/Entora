@@ -378,4 +378,34 @@ export const translations = {
   },
 } as const;
 
-export type TranslationKey = typeof translations.en;
+// Explicit interface so all language objects are assignable to a single type
+export interface RoleEntry { label: string; desc: string; }
+export interface TranslationKey {
+  nav: {
+    community: string; roadmap: string; schools: string; resources: string;
+    forParents: string; signIn: string; getStarted: string; signOut: string;
+  };
+  landing: {
+    badge: string; heroHeadline: string; heroHighlight: string; heroSub: string;
+    cta1: string; cta2: string;
+    statsUniversities: string; statsCountries: string; statsFree: string; statsGrades: string;
+    layersTitle: string; layersSub: string;
+    freeTitle: string; freeSub: string;
+    stakeholdersTitle: string; testimonialsTitle: string;
+    finalTitle: string; finalSub: string;
+  };
+  signup: {
+    title: string; subtitle: string; iAm: string; changeRole: string;
+    fullName: string; fullNamePlaceholder: string;
+    email: string; emailPlaceholder: string;
+    password: string; passwordPlaceholder: string;
+    creating: string; create: string;
+    haveAccount: string; signInLink: string;
+    successTitle: string; successSub: string; backToSignIn: string;
+    roles: {
+      student: RoleEntry; parent: RoleEntry; counselor: RoleEntry;
+      specialist: RoleEntry; school_rep: RoleEntry;
+    };
+  };
+  common: { loading: string; error: string };
+}
