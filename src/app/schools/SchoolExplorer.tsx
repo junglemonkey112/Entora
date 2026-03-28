@@ -30,7 +30,7 @@ interface University {
   logo_url: string | null;
 }
 
-const countryOptions = ["All", "US", "UK"];
+const countryOptions = ["All", "US", "UK", "CA", "AU"];
 const acceptanceOptions = [
   { label: "All", min: 0, max: 100 },
   { label: "< 10%", min: 0, max: 10 },
