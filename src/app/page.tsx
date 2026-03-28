@@ -1,8 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import {
   GraduationCap,
-  Users,
-  School,
   BookOpen,
   Map,
   Search,
@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Globe,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const stakeholders = [
   {
@@ -37,41 +38,6 @@ const stakeholders = [
   },
 ];
 
-const features = [
-  {
-    icon: MessageSquare,
-    title: "Community Forum",
-    description:
-      "Open Q&A threads on essays, financial aid, international admissions, and more. Real answers from students who've been there.",
-    href: "/community",
-    color: "text-indigo-600",
-  },
-  {
-    icon: Map,
-    title: "Grade-by-Grade Roadmap",
-    description:
-      "Interactive timeline from grade 9-12 with milestone checklists. Know exactly what to do and when, localized for your country.",
-    href: "/roadmap",
-    color: "text-teal-600",
-  },
-  {
-    icon: Search,
-    title: "School Explorer",
-    description:
-      "Search and compare universities by acceptance rate, cost, location, and programs. Every school page shows community threads and guides who attend.",
-    href: "/schools",
-    color: "text-purple-600",
-  },
-  {
-    icon: BookOpen,
-    title: "Resource Library",
-    description:
-      'Free essay examples, financial aid checklists, visa guides, and \"how I got in\" stories from current students.',
-    href: "/resources",
-    color: "text-amber-600",
-  },
-];
-
 const layers = [
   {
     label: "Free layer",
@@ -86,18 +52,77 @@ const layers = [
   {
     label: "B2B layer",
     color: "bg-amber-700",
-    description: "University partnerships, analytics, branded profiles \u2014 SaaS pricing",
+    description:
+      "University partnerships, analytics, branded profiles \u2014 SaaS pricing",
   },
 ];
 
 const stats = [
-  { value: "70+", label: "Universities indexed" },
-  { value: "4", label: "Countries supported" },
-  { value: "100%", label: "Free core features" },
-  { value: "9-12", label: "Grades covered" },
+  { value: "70+", labelKey: "statsUniversities" as const },
+  { value: "4",   labelKey: "statsCountries" as const },
+  { value: "100%", labelKey: "statsFree" as const },
+  { value: "9-12", labelKey: "statsGrades" as const },
+];
+
+const testimonials = [
+  {
+    quote:
+      "The roadmap told me exactly when to start SAT prep. I would have missed the deadline without it.",
+    name: "Priya K.",
+    detail: "Grade 11, Mumbai",
+  },
+  {
+    quote:
+      "Being able to compare schools by acceptance rate AND cost in one place saved me weeks of research.",
+    name: "Marcus T.",
+    detail: "Grade 12, Atlanta",
+  },
+  {
+    quote:
+      "The community answered my financial aid question in 2 hours. My counselor took 2 weeks.",
+    name: "Amara O.",
+    detail: "Grade 11, Lagos",
+  },
 ];
 
 export default function Home() {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: MessageSquare,
+      title: "Community Forum",
+      description:
+        "Open Q&A threads on essays, financial aid, international admissions, and more. Real answers from students who've been there.",
+      href: "/community",
+      color: "text-indigo-600",
+    },
+    {
+      icon: Map,
+      title: "Grade-by-Grade Roadmap",
+      description:
+        "Interactive timeline from grade 9-12 with milestone checklists. Know exactly what to do and when, localized for your country.",
+      href: "/roadmap",
+      color: "text-teal-600",
+    },
+    {
+      icon: Search,
+      title: "School Explorer",
+      description:
+        "Search and compare universities by acceptance rate, cost, location, and programs. Every school page shows community threads and guides who attend.",
+      href: "/schools",
+      color: "text-purple-600",
+    },
+    {
+      icon: BookOpen,
+      title: "Resource Library",
+      description:
+        'Free essay examples, financial aid checklists, visa guides, and "how I got in" stories from current students.',
+      href: "/resources",
+      color: "text-amber-600",
+    },
+  ];
+
   return (
     <div>
       {/* Hero */}
@@ -107,30 +132,31 @@ export default function Home() {
             <div className="flex items-center gap-2 mb-6">
               <span className="inline-flex items-center rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-3 py-1 text-sm font-medium text-indigo-700 dark:text-indigo-300">
                 <Globe className="h-3.5 w-3.5 mr-1.5" />
-                US &middot; UK &middot; Canada &middot; Australia
+                {t.landing.badge}
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight">
-              Your complete college admissions{" "}
-              <span className="text-indigo-600 dark:text-indigo-400">companion</span>
+              {t.landing.heroHeadline}{" "}
+              <span className="text-indigo-600 dark:text-indigo-400">
+                {t.landing.heroHighlight}
+              </span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
-              Free community, grade-by-grade roadmap, school explorer, and expert
-              sessions. Everything you need \u2014 from first research to acceptance letter.
+              {t.landing.heroSub}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/signup"
                 className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 text-base font-medium text-white hover:bg-indigo-700 transition-colors shadow-sm"
               >
-                Get started free
+                {t.landing.cta1}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href="/community"
                 className="inline-flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 px-6 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
-                Browse community
+                {t.landing.cta2}
               </Link>
             </div>
           </div>
@@ -144,12 +170,12 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
+              <div key={stat.labelKey} className="text-center">
                 <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
                   {stat.value}
                 </p>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {stat.label}
+                  {t.landing[stat.labelKey]}
                 </p>
               </div>
             ))}
@@ -162,12 +188,10 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Three layers, one platform
+              {t.landing.layersTitle}
             </h2>
             <p className="mt-3 text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              Every layer feeds the next \u2014 free users become paid users, paid
-              users generate data that powers partnerships, and partnerships drive
-              more free users.
+              {t.landing.layersSub}
             </p>
           </div>
           <div className="space-y-4 max-w-3xl mx-auto">
@@ -197,11 +221,10 @@ export default function Home() {
               100% free
             </span>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Everything you need to get started
+              {t.landing.freeTitle}
             </h2>
             <p className="mt-3 text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              No paywall. No trial. The free layer is genuinely useful on its own \u2014
-              not a teaser.
+              {t.landing.freeSub}
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
@@ -229,7 +252,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Built for everyone in the journey
+              {t.landing.stakeholdersTitle}
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -262,40 +285,18 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              What students say
+              {t.landing.testimonialsTitle}
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote:
-                  "The roadmap told me exactly when to start SAT prep. I would have missed the deadline without it.",
-                name: "Priya K.",
-                detail: "Grade 11, Mumbai",
-              },
-              {
-                quote:
-                  "Being able to compare schools by acceptance rate AND cost in one place saved me weeks of research.",
-                name: "Marcus T.",
-                detail: "Grade 12, Atlanta",
-              },
-              {
-                quote:
-                  "The community answered my financial aid question in 2 hours. My counselor took 2 weeks.",
-                name: "Amara O.",
-                detail: "Grade 11, Lagos",
-              },
-            ].map((testimonial) => (
+            {testimonials.map((testimonial) => (
               <div
                 key={testimonial.name}
                 className="p-6 rounded-xl bg-white dark:bg-neutral-950 border border-gray-200 dark:border-gray-800"
               >
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 text-amber-400 fill-amber-400"
-                    />
+                    <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
                   ))}
                 </div>
                 <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 italic">
@@ -318,17 +319,16 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <GraduationCap className="h-12 w-12 text-indigo-600 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            Start your college journey today
+            {t.landing.finalTitle}
           </h2>
           <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-xl mx-auto">
-            Join thousands of students using Entora&apos;s free tools to navigate
-            college admissions with confidence.
+            {t.landing.finalSub}
           </p>
           <Link
             href="/signup"
             className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 transition-colors shadow-sm"
           >
-            Get started free
+            {t.landing.cta1}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
