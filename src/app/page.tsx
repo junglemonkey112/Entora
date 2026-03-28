@@ -107,7 +107,7 @@ export default function Home() {
             <div className="flex items-center gap-2 mb-6">
               <span className="inline-flex items-center rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-3 py-1 text-sm font-medium text-indigo-700 dark:text-indigo-300">
                 <Globe className="h-3.5 w-3.5 mr-1.5" />
-                US &middot; UK &middot; India &middot; Nigeria
+                US &middot; UK &middot; Canada &middot; Australia
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight">
