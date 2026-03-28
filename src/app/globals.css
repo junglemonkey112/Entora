@@ -1,27 +1,57 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Entora Design System — Warm Violet Theme
+   Primary: warm violet (replaces cold indigo)
+   Backgrounds: warm stone-tinted darks + soft warm lights
+   ============================================================ */
+
+@theme {
+  /* Warm violet palette — replaces Tailwind's default indigo.
+     Shifted ~20° toward purple/magenta for warmth & creativity. */
+  --color-indigo-50:  #f5f0ff;
+  --color-indigo-100: #ede4ff;
+  --color-indigo-200: #d9c8ff;
+  --color-indigo-300: #bc9afe;
+  --color-indigo-400: #9a70f7;
+  --color-indigo-500: #7c52ee;
+  --color-indigo-600: #6636e8;  /* Primary CTA */
+  --color-indigo-700: #5528cc;
+  --color-indigo-800: #451fa8;
+  --color-indigo-900: #381888;
+  --color-indigo-950: #210f52;
+
+  /* Warm dark backgrounds — subtle purple undertone, not cold black */
+  --color-neutral-900: #1c1924;
+  --color-neutral-950: #13101a;
+
+  /* Warm light backgrounds — faint warm tint on off-whites */
+  --color-gray-50: #f9f8fc;
+  --color-gray-100: #f2f0f9;
+}
+
 :root {
-  --color-primary: #4f46e5;
-  --color-primary-dark: #4338ca;
-  --color-primary-light: #818cf8;
-  --color-accent: #0d9488;
-  --color-accent-dark: #0f766e;
-  --color-accent-light: #2dd4bf;
-  --color-warning: #b45309;
-  --color-surface: #ffffff;
-  --color-surface-dark: #1a1a1a;
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --color-border: #e5e7eb;
+  --color-primary:       #6636e8;
+  --color-primary-dark:  #5528cc;
+  --color-primary-light: #9a70f7;
+  --color-accent:        #0d9488;
+  --color-accent-dark:   #0f766e;
+  --color-accent-light:  #2dd4bf;
+  --color-warning:       #b45309;
+  --color-surface:       #ffffff;
+  --color-surface-dark:  #1c1924;
+  --color-text:          #1a1625;
+  --color-text-muted:    #6b7280;
+  --color-border:        #e5e2f0;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-surface: #0a0a0a;
-    --color-surface-dark: #1a1a1a;
-    --color-text: #ededed;
-    --color-text-muted: #9ca3af;
-    --color-border: #2d2d2d;
+    --color-surface:      #13101a;
+    --color-surface-dark: #1c1924;
+    --color-text:         #ece8f8;   /* slightly violet-tinted off-white, softer than pure white */
+    --color-text-muted:   #a89ec0;   /* warm muted purple-grey */
+    --color-border:       #2e2a40;
   }
 }
 
