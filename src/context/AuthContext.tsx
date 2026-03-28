@@ -8,7 +8,7 @@ interface Profile {
   id: string;
   full_name: string;
   email: string;
-  role: "student" | "parent" | "counselor" | "guide" | "specialist" | "university_admin";
+  role: "student" | "parent" | "counselor" | "guide" | "specialist" | "university_admin" | "school_rep";
   avatar_url: string | null;
   grade: string | null;
   gpa: number | null;

@@ -3,20 +3,39 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { GraduationCap, User, Users, School } from "lucide-react";
+import {
+  GraduationCap,
+  User,
+  Users,
+  School,
+  Briefcase,
+  Building2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const roles = [
-  { id: "student", label: "Student", icon: User, description: "I'm applying to college" },
-  { id: "parent", label: "Parent", icon: Users, description: "My child is applying" },
-  { id: "counselor", label: "Counselor", icon: School, description: "I advise students" },
-];
+const roleIcons = {
+  student:    User,
+  parent:     Users,
+  counselor:  School,
+  specialist: Briefcase,
+  school_rep: Building2,
+};
+
+// Maps signup role key → DB role value
+const roleToDbRole: Record<string, string> = {
+  student:    "student",
+  parent:     "parent",
+  counselor:  "counselor",
+  specialist: "specialist",
+  school_rep: "university_admin",
+};
 
 export default function SignupPage() {
   const [step, setStep] = useState(1);
-  const [role, setRole] = useState("student");
+  const [roleKey, setRoleKey] = useState<keyof typeof roleIcons>("student");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +43,16 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { signUp } = useAuth();
+  const { t } = useLanguage();
+
+  const roles = (
+    Object.keys(roleIcons) as Array<keyof typeof roleIcons>
+  ).map((id) => ({
+    id,
+    label: t.signup.roles[id].label,
+    description: t.signup.roles[id].desc,
+    icon: roleIcons[id],
+  }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +65,8 @@ export default function SignupPage() {
       return;
     }
 
-    const { error } = await signUp(email, password, fullName, role);
+    const dbRole = roleToDbRole[roleKey];
+    const { error } = await signUp(email, password, fullName, dbRole);
     if (error) {
       setError(error);
       setLoading(false);
@@ -53,14 +83,13 @@ export default function SignupPage() {
             <GraduationCap className="h-8 w-8 text-green-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Check your email
+            {t.signup.successTitle}
           </h2>
           <p className="text-gray-500 dark:text-gray-400">
-            We sent a confirmation link to <strong>{email}</strong>. Click the
-            link to activate your account.
+            {t.signup.successSub.replace("{email}", email)}
           </p>
           <Link href="/login" className="inline-block mt-6">
-            <Button variant="outline">Back to sign in</Button>
+            <Button variant="outline">{t.signup.backToSignIn}</Button>
           </Link>
         </div>
       </div>
@@ -68,38 +97,38 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <GraduationCap className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Create your account
+            {t.signup.title}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Join thousands of students on their college journey
+            {t.signup.subtitle}
           </p>
         </div>
 
         {step === 1 ? (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              I am a...
+              {t.signup.iAm}
             </p>
             {roles.map((r) => (
               <button
                 key={r.id}
                 onClick={() => {
-                  setRole(r.id);
+                  setRoleKey(r.id);
                   setStep(2);
                 }}
                 className={cn(
                   "w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left",
-                  role === r.id
+                  roleKey === r.id
                     ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20"
-                    : "border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700"
+                    : "border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gray-50 dark:hover:bg-gray-900/30"
                 )}
               >
-                <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center shrink-0">
                   <r.icon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
@@ -113,12 +142,12 @@ export default function SignupPage() {
               </button>
             ))}
             <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-              Already have an account?{" "}
+              {t.signup.haveAccount}{" "}
               <Link
                 href="/login"
                 className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
               >
-                Sign in
+                {t.signup.signInLink}
               </Link>
             </p>
           </div>
@@ -135,13 +164,13 @@ export default function SignupPage() {
               onClick={() => setStep(1)}
               className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mb-2"
             >
-              &larr; Change role ({roles.find((r) => r.id === role)?.label})
+              {t.signup.changeRole} ({roles.find((r) => r.id === roleKey)?.label})
             </button>
 
             <Input
               id="fullName"
-              label="Full name"
-              placeholder="Your full name"
+              label={t.signup.fullName}
+              placeholder={t.signup.fullNamePlaceholder}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
@@ -149,9 +178,9 @@ export default function SignupPage() {
 
             <Input
               id="email"
-              label="Email"
+              label={t.signup.email}
               type="email"
-              placeholder="you@example.com"
+              placeholder={t.signup.emailPlaceholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -159,25 +188,25 @@ export default function SignupPage() {
 
             <Input
               id="password"
-              label="Password"
+              label={t.signup.password}
               type="password"
-              placeholder="At least 6 characters"
+              placeholder={t.signup.passwordPlaceholder}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Create account"}
+              {loading ? t.signup.creating : t.signup.create}
             </Button>
 
             <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-              Already have an account?{" "}
+              {t.signup.haveAccount}{" "}
               <Link
                 href="/login"
                 className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
               >
-                Sign in
+                {t.signup.signInLink}
               </Link>
             </p>
           </form>
