@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getT } from "@/i18n/server";
 import { MessageSquare, ThumbsUp, Plus, Clock } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import { formatDistanceToNow } from "date-fns";
@@ -18,7 +19,7 @@ export default async function CommunityPage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const params = await searchParams;
-  const supabase = await createClient();
+  const [supabase, t] = await Promise.all([createClient(), getT()]);
   const activeCategory = params.category;
 
   let query = supabase
@@ -53,10 +54,10 @@ export default async function CommunityPage({
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Community
+            {t.community.pageTitle}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Ask questions, share experiences, help each other
+            {t.community.pageSubtitle}
           </p>
         </div>
         <Link
@@ -101,10 +102,10 @@ export default async function CommunityPage({
           <div className="text-center py-16">
             <MessageSquare className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-              No posts yet
+              {t.community.noPostsTitle}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              Be the first to start a discussion!
+              {t.community.noPostsSub}
             </p>
             <Link
               href="/community/new"

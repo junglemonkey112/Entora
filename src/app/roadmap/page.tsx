@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+import { getT } from "@/i18n/server";
 import Link from "next/link";
 import RoadmapTimeline from "./RoadmapTimeline";
 
 export default async function RoadmapPage() {
-  const supabase = await createClient();
+  const [supabase, t] = await Promise.all([createClient(), getT()]);
 
   const {
     data: { user },
@@ -54,11 +54,10 @@ export default async function RoadmapPage() {
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Grade-by-Grade Roadmap
+          {t.roadmap.pageTitle}
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">
-          Interactive timeline from grade 9 through 12. Know exactly what to do
-          and when — localized for US, UK, Canada, and Australia.
+          {t.roadmap.pageSubtitle}
         </p>
       </div>
 
