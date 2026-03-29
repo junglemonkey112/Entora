@@ -61,7 +61,7 @@ export default async function SchoolDetailPage({
       </Link>
 
       {/* Hero */}
-      <div className="flex items-start gap-4 mb-8">
+      <div className="flex items-start justify-between gap-4 mb-8">
         <div className="h-16 w-16 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-2xl font-bold text-indigo-600 dark:text-indigo-400 shrink-0">
           {school.name.charAt(0)}
         </div>
@@ -84,6 +84,12 @@ export default async function SchoolDetailPage({
             </a>
           )}
         </div>
+        <Link
+          href={`/schools/compare?schools=${slug}`}
+          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+        >
+          + Compare
+        </Link>
       </div>
 
       {/* Stats */}
