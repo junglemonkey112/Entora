@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 
 const categories = [
   { slug: "general", name: "General" },
@@ -16,6 +16,11 @@ const categories = [
   { slug: "international", name: "International" },
   { slug: "test-prep", name: "Test Prep" },
 ];
+
+interface UniversityOption {
+  name: string;
+  slug: string;
+}
 
 export default function NewPostPage() {
   const { user, loading } = useAuth();
@@ -29,6 +34,12 @@ export default function NewPostPage() {
   const [error, setError] = useState("");
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
 
+  // School tagging state
+  const [schoolInput, setSchoolInput] = useState("");
+  const [schoolTags, setSchoolTags] = useState<string[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<UniversityOption[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<UniversityOption[]>([]);
+
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
@@ -37,18 +48,54 @@ export default function NewPostPage() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const { data } = await supabase
-        .from("forum_categories")
-        .select("id, slug");
+      const { data } = await supabase.from("forum_categories").select("id, slug");
       if (data) {
         const map: Record<string, string> = {};
         data.forEach((c) => (map[c.slug] = c.id));
         setCategoryMap(map);
       }
     };
+    const fetchSchools = async () => {
+      const { data } = await supabase
+        .from("universities")
+        .select("name, slug")
+        .order("name");
+      if (data) setSchoolOptions(data);
+    };
     fetchCategories();
+    fetchSchools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Filter school autocomplete
+  useEffect(() => {
+    if (schoolInput.length < 2) {
+      setFilteredOptions([]);
+      return;
+    }
+    const lower = schoolInput.toLowerCase();
+    setFilteredOptions(
+      schoolOptions
+        .filter(
+          (s) =>
+            s.name.toLowerCase().includes(lower) &&
+            !schoolTags.includes(s.slug)
+        )
+        .slice(0, 6)
+    );
+  }, [schoolInput, schoolOptions, schoolTags]);
+
+  const addSchoolTag = (slug: string) => {
+    if (!schoolTags.includes(slug)) {
+      setSchoolTags((prev) => [...prev, slug]);
+    }
+    setSchoolInput("");
+    setFilteredOptions([]);
+  };
+
+  const removeSchoolTag = (slug: string) => {
+    setSchoolTags((prev) => prev.filter((s) => s !== slug));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +110,7 @@ export default function NewPostPage() {
         category_id: categoryMap[categorySlug] || null,
         title: title.trim(),
         content: content.trim(),
+        school_tags: schoolTags.length > 0 ? schoolTags : null,
       })
       .select("id")
       .single();
@@ -74,6 +122,11 @@ export default function NewPostPage() {
       router.push(`/community/post/${data.id}`);
     }
   };
+
+  // Build a slug→name map for display
+  const slugToName = Object.fromEntries(
+    schoolOptions.map((s) => [s.slug, s.name])
+  );
 
   if (loading || !user) return null;
 
@@ -108,9 +161,7 @@ export default function NewPostPage() {
             className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             {categories.map((cat) => (
-              <option key={cat.slug} value={cat.slug}>
-                {cat.name}
-              </option>
+              <option key={cat.slug} value={cat.slug}>{cat.name}</option>
             ))}
           </select>
         </div>
@@ -138,16 +189,67 @@ export default function NewPostPage() {
           />
         </div>
 
+        {/* School tags */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Tag schools <span className="text-gray-400 font-normal">(optional)</span>
+          </label>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+            Tag relevant universities so your post shows up on their school page.
+          </p>
+
+          {/* Selected tags */}
+          {schoolTags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {schoolTags.map((slug) => (
+                <span
+                  key={slug}
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm"
+                >
+                  {slugToName[slug] ?? slug}
+                  <button
+                    type="button"
+                    onClick={() => removeSchoolTag(slug)}
+                    className="hover:text-indigo-900 dark:hover:text-indigo-100"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Autocomplete input */}
+          <div className="relative">
+            <input
+              type="text"
+              value={schoolInput}
+              onChange={(e) => setSchoolInput(e.target.value)}
+              placeholder="Type a university name..."
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            {filteredOptions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-900 shadow-lg py-1 z-20">
+                {filteredOptions.map((opt) => (
+                  <button
+                    key={opt.slug}
+                    type="button"
+                    onClick={() => addSchoolTag(opt.slug)}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    {opt.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="flex gap-3 justify-end">
           <Link href="/community">
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
+            <Button type="button" variant="outline">Cancel</Button>
           </Link>
-          <Button
-            type="submit"
-            disabled={!title.trim() || !content.trim() || submitting}
-          >
+          <Button type="submit" disabled={!title.trim() || !content.trim() || submitting}>
             {submitting ? "Posting..." : "Post"}
           </Button>
         </div>
