@@ -21,9 +21,17 @@ INSERT INTO profiles (id, full_name, email, role, country, grade, target_major) 
   ('a1000000-0000-0000-0000-000000000003', '김지원', 'jiwon@example.com',    'student', 'Korea',  11, 'Business'),
   -- Japanese student
   ('a1000000-0000-0000-0000-000000000004', '田中はな', 'hana@example.com',    'student', 'Japan',  12, 'Engineering'),
-  -- Student Counselor (guide) — attended UCL
+  -- Student Counselor (guide) — now at UCL
   ('a1000000-0000-0000-0000-000000000005', '王思远', 'siyuan@example.com',   'guide',   'China',  NULL, NULL)
 ON CONFLICT (id) DO NOTHING;
+
+-- Update guide profile with counselor-specific fields (requires migration_counselor_applications.sql first)
+UPDATE profiles SET
+  university  = 'University College London',
+  grad_year   = 2027,
+  applied_to  = ARRAY['UCL', 'University of Edinburgh', 'King''s College London', 'Durham University'],
+  expertise   = ARRAY['essays', 'uk-applications', 'international', 'financial-aid']
+WHERE id = 'a1000000-0000-0000-0000-000000000005';
 
 -- ─── Helper: look up category IDs ───────────────────────────────────────────
 
