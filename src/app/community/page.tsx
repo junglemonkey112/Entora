@@ -146,6 +146,18 @@ export default async function CommunityPage({
                   <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                     {post.content}
                   </p>
+                  {post.school_tags && (post.school_tags as string[]).length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {(post.school_tags as string[]).map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/20 px-2 py-0.5 text-xs text-indigo-600 dark:text-indigo-400"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-4 mt-3 text-xs text-gray-400 dark:text-gray-500">

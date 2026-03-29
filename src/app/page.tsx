@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -13,6 +14,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createClient } from "@/lib/supabase/client";
 
 const stakeholders = [
   {
@@ -64,7 +66,7 @@ const stats = [
   { value: "9-12", labelKey: "statsGrades" as const },
 ];
 
-const testimonials = [
+const fallbackTestimonials = [
   {
     quote:
       "The roadmap told me exactly when to start SAT prep. I would have missed the deadline without it.",
@@ -85,8 +87,35 @@ const testimonials = [
   },
 ];
 
+interface Testimonial {
+  quote: string;
+  name: string;
+  detail: string;
+}
+
 export default function Home() {
   const { t } = useLanguage();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from("testimonials")
+      .select("quote, name, school_accepted, country")
+      .eq("is_featured", true)
+      .limit(6)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setTestimonials(
+            data.map((t) => ({
+              quote: t.quote,
+              name: t.name,
+              detail: [t.school_accepted, t.country].filter(Boolean).join(", "),
+            }))
+          );
+        }
+      });
+  }, []);
 
   const features = [
     {
