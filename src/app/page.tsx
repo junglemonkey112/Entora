@@ -183,6 +183,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* University logo bar */}
+      <section className="py-8 border-b border-gray-200 dark:border-gray-800">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-5">
+            Our student counselors attend
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              "MIT", "Stanford", "Harvard", "Columbia",
+              "UCL", "Princeton", "Yale", "Penn",
+            ].map((uni) => (
+              <span
+                key={uni}
+                className="inline-flex items-center rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-900 px-4 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                {uni}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Platform layers */}
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
