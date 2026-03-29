@@ -13,7 +13,7 @@ export default async function ParentDashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) return redirect("/login");
 
   // Verify this user is a parent
   const { data: profile } = await supabase
@@ -22,7 +22,7 @@ export default async function ParentDashboardPage() {
     .eq("id", user.id)
     .single();
 
-  if (!profile || profile.role !== "parent") redirect("/");
+  if (!profile || profile.role !== "parent") return redirect("/");
 
   // Find child profile by parent's linked email (MVP: match by email in user_metadata or same domain)
   // For MVP, we show what we can fetch for the parent themselves, and also show a "link your child" prompt
@@ -75,7 +75,7 @@ export default async function ParentDashboardPage() {
         .order("scheduled_at")
         .limit(5);
 
-      upcomingBookings = (bookings ?? []) as typeof upcomingBookings;
+      upcomingBookings = (bookings ?? []) as unknown as typeof upcomingBookings;
     }
   }
 

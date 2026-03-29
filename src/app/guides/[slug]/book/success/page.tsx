@@ -4,6 +4,13 @@ import Link from "next/link";
 import { CheckCircle, CalendarDays, MessageSquare } from "lucide-react";
 import Button from "@/components/ui/Button";
 
+interface BookingRow {
+  id: string;
+  scheduled_at: string;
+  topic: string | null;
+  guide: { slug: string; profile: { full_name: string } | null } | null;
+}
+
 export default async function BookSuccessPage({
   params,
   searchParams,
@@ -18,38 +25,32 @@ export default async function BookSuccessPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
 
-  // Fetch booking details
-  let booking: {
-    id: string;
-    scheduled_at: string;
-    topic: string | null;
-    guide: { slug: string; profile: { full_name: string } | null } | null;
-  } | null = null;
+  if (!user) return redirect("/login");
+
+  const SELECT = "id, scheduled_at, topic, guide:guide_profiles!guide_id(slug, profile:profiles!user_id(full_name))";
+  let booking: BookingRow | null = null;
 
   if (booking_id) {
     const { data } = await supabase
       .from("bookings")
-      .select("id, scheduled_at, topic, guide:guide_profiles!guide_id(slug, profile:profiles!user_id(full_name))")
+      .select(SELECT)
       .eq("id", booking_id)
       .eq("student_id", user.id)
       .single();
-    booking = data as typeof booking;
+    booking = (data ?? null) as BookingRow | null;
   } else if (session_id) {
-    // Stripe session redirect — look up by stripe_session_id
     const { data } = await supabase
       .from("bookings")
-      .select("id, scheduled_at, topic, guide:guide_profiles!guide_id(slug, profile:profiles!user_id(full_name))")
+      .select(SELECT)
       .eq("stripe_session_id", session_id)
       .eq("student_id", user.id)
       .single();
-    booking = data as typeof booking;
+    booking = (data ?? null) as BookingRow | null;
   }
 
-  const guideName =
-    (booking?.guide?.profile as { full_name: string } | null)?.full_name ??
-    "your counselor";
+  const guideData = booking?.guide as { slug: string; profile: { full_name: string } | null } | null;
+  const guideName = guideData?.profile?.full_name ?? "your counselor";
 
   const scheduledAt = booking?.scheduled_at
     ? new Date(booking.scheduled_at).toLocaleString("en-US", {
@@ -72,7 +73,11 @@ export default async function BookSuccessPage({
         Booking confirmed!
       </h1>
       <p className="text-gray-500 dark:text-gray-400 mb-2">
-        Your session with <span className="font-semibold text-gray-700 dark:text-gray-300">{guideName}</span> is confirmed.
+        Your session with{" "}
+        <span className="font-semibold text-gray-700 dark:text-gray-300">
+          {guideName}
+        </span>{" "}
+        is confirmed.
       </p>
       {scheduledAt && (
         <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-8">
