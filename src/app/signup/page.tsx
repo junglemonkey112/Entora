@@ -36,6 +36,7 @@ const roleToDbRole: Record<string, string> = {
 export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [roleKey, setRoleKey] = useState<keyof typeof roleIcons>("student");
+  const [country, setCountry] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,7 +67,7 @@ export default function SignupPage() {
     }
 
     const dbRole = roleToDbRole[roleKey];
-    const { error } = await signUp(email, password, fullName, dbRole);
+    const { error } = await signUp(email, password, fullName, dbRole, country || undefined);
     if (error) {
       setError(error);
       setLoading(false);
@@ -151,6 +152,51 @@ export default function SignupPage() {
               </Link>
             </p>
           </div>
+        ) : step === 2 ? (
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mb-2"
+            >
+              ← {roles.find((r) => r.id === roleKey)?.label}
+            </button>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Where are you applying from?
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              We&apos;ll personalise your roadmap and show relevant resources.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                "China", "India", "South Korea", "Japan",
+                "United States", "United Kingdom", "Canada", "Australia",
+                "Brazil", "Germany", "Nigeria", "Mexico",
+                "Other",
+              ].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => { setCountry(c); setStep(3); }}
+                  className={cn(
+                    "px-3 py-2.5 rounded-xl border text-sm text-left transition-all",
+                    country === c
+                      ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300"
+                      : "border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-700"
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setStep(3)}
+              className="w-full text-center text-xs text-gray-400 dark:text-gray-500 hover:underline mt-2"
+            >
+              Skip for now
+            </button>
+          </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -161,10 +207,10 @@ export default function SignupPage() {
 
             <button
               type="button"
-              onClick={() => setStep(1)}
+              onClick={() => setStep(2)}
               className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mb-2"
             >
-              {t.signup.changeRole} ({roles.find((r) => r.id === roleKey)?.label})
+              {t.signup.changeRole} ({roles.find((r) => r.id === roleKey)?.label}{country ? ` · ${country}` : ""})
             </button>
 
             <Input
