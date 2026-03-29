@@ -128,7 +128,7 @@ export default async function CommunityPage({
                       {(post.author as { full_name: string })?.full_name || "Anonymous"}
                     </span>
                     {(post.author as { role: string })?.role === "guide" && (
-                      <Badge variant="secondary">Guide</Badge>
+                      <Badge variant="secondary">Student Counselor</Badge>
                     )}
                     {(post.author as { role: string })?.role === "specialist" && (
                       <Badge variant="warning">Specialist</Badge>

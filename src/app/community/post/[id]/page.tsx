@@ -60,7 +60,7 @@ export default async function PostPage({
           <span className="text-sm font-medium text-gray-900 dark:text-white">
             {author?.full_name || "Anonymous"}
           </span>
-          {author?.role === "guide" && <Badge variant="secondary">Guide</Badge>}
+          {author?.role === "guide" && <Badge variant="secondary">Student Counselor</Badge>}
           {author?.role === "specialist" && (
             <Badge variant="warning">Specialist</Badge>
           )}

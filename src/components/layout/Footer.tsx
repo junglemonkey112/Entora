@@ -11,8 +11,8 @@ const footerLinks = {
   "For You": [
     { name: "Students", href: "/community" },
     { name: "Parents", href: "/parents" },
-    { name: "Counselors", href: "/counselor" },
-    { name: "Become a Guide", href: "/become-guide" },
+    { name: "Student Counselors", href: "/counselors" },
+    { name: "Become a Student Counselor", href: "/become-counselor" },
   ],
   Company: [
     { name: "About", href: "/about" },

@@ -127,7 +127,7 @@ export default function CommentSection({
                   {comment.author?.full_name || "Anonymous"}
                 </span>
                 {comment.author?.role === "guide" && (
-                  <Badge variant="secondary">Guide</Badge>
+                  <Badge variant="secondary">Student Counselor</Badge>
                 )}
                 <span className="text-xs text-gray-400 dark:text-gray-500">
                   {formatDistanceToNow(new Date(comment.created_at), {

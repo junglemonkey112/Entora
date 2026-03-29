@@ -67,8 +67,8 @@ export const translations = {
         student: { label: "Student", desc: "I'm applying to college" },
         parent: { label: "Parent", desc: "My child is applying" },
         counselor: {
-          label: "School Counselor",
-          desc: "I'm a school guidance counselor",
+          label: "Student Counselor",
+          desc: "I guide students through college applications",
         },
         specialist: {
           label: "Industry Specialist",
@@ -141,7 +141,7 @@ export const translations = {
       roles: {
         student: { label: "学生", desc: "我正在申请大学" },
         parent: { label: "家长", desc: "我的孩子正在申请大学" },
-        counselor: { label: "学校辅导员", desc: "我是学校升学辅导员" },
+        counselor: { label: "学生辅导员", desc: "我帮助学生完成大学申请" },
         specialist: { label: "行业专家", desc: "我是导师或行业专家" },
         school_rep: { label: "学校招生代表", desc: "我代表一所大学或机构" },
       },
@@ -210,8 +210,8 @@ export const translations = {
         student: { label: "Estudiante", desc: "Estoy solicitando ingreso a la universidad" },
         parent: { label: "Padre/Madre", desc: "Mi hijo/a está solicitando admisión" },
         counselor: {
-          label: "Consejero Escolar",
-          desc: "Soy consejero/a de orientación escolar",
+          label: "Consejero Estudiantil",
+          desc: "Oriento a estudiantes en sus solicitudes universitarias",
         },
         specialist: {
           label: "Especialista",
@@ -286,7 +286,7 @@ export const translations = {
       roles: {
         student: { label: "학생", desc: "대학에 지원하고 있어요" },
         parent: { label: "학부모", desc: "자녀가 대학에 지원하고 있어요" },
-        counselor: { label: "학교 상담사", desc: "학교 진학 상담사예요" },
+        counselor: { label: "학생 상담사", desc: "학생들의 대학 지원을 도와드려요" },
         specialist: { label: "업계 전문가", desc: "멘토 또는 업계 전문가예요" },
         school_rep: {
           label: "학교 대표",
@@ -358,8 +358,8 @@ export const translations = {
         student: { label: "学生", desc: "大学に出願しています" },
         parent: { label: "保護者", desc: "子どもが受験中です" },
         counselor: {
-          label: "スクールカウンセラー",
-          desc: "学校のガイダンスカウンセラーです",
+          label: "学生カウンセラー",
+          desc: "学生の大学出願をサポートしています",
         },
         specialist: {
           label: "業界専門家",
